@@ -9,6 +9,7 @@ import userRoutes from "./routes/user.routes.js";
 dotenv.config();
 const app = express();
 const port = process.env.PORT;
+app.use(express.json());
 app.use(urlencoded({extended: true}));
 app.use(cors({
     origin: process.env.BASE_URL,
@@ -19,7 +20,7 @@ app.use(cors({
 
 
 app.get('/', (req, res) => {
-  res.send('Hello World!')
+  res.send('Hello World! vanshbaranwal')
 });
 
 app.use('/api/v1/users', userRoutes);

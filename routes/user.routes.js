@@ -1,11 +1,11 @@
 import express from 'express';
-import { register } from '../controllers/auth.controllers.js';
+import { register, verify } from '../controllers/auth.controllers.js';
 
 
 const router = express.Router();
 
 
-router.get("/register", register);
-
+router.post("/register", register);
+router.get("/verify/:token", verify);
 
 export default router;
