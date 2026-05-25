@@ -1,5 +1,5 @@
 {
-  "name": "fullstack",
+  "name": "auth_system",
   "version": "1.0.0",
   "description": "a node project for authentication",
   "main": "index.js",
