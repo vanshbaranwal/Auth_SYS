@@ -147,7 +147,7 @@ const login = async(req, res) => {
         }
 
         const token = jwt.sign({id: user._id, role: user.role},
-            "shhhhh", {
+            process.env.JWT_SECRET, {
                 expiresIn: '24h'
             }
         );
@@ -175,7 +175,43 @@ const login = async(req, res) => {
     }
 }
 
-export { registerUser, verifyUser, login };
+const getMe = async(req, res) => {
+    try {
+        console.log("reached at the profile level");
+    } catch (error) {
+        
+    }
+}
+
+
+const logoutUser = async(req, res) => {
+    try {
+        
+    } catch (error) {
+        
+    }
+}
+
+
+const forgotPassword = async(req, res) => {
+    try {
+        
+    } catch (error) {
+        
+    }
+}
+
+
+const resetPassword = async(req,res) => {
+    try {
+        
+    } catch (error) {
+        
+    }
+}
+
+
+export { registerUser, verifyUser, login, logoutUser, forgotPassword, resetPassword, getMe };
 
 
 // pending routes 
