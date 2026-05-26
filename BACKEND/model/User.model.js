@@ -17,8 +17,12 @@ const userSchema = new mongoose.Schema({ // here schema is a method
         default: false
     },
 
-    verificationToken: {
+    verificationOtp: {
         type: String,
+    },
+
+    verificationOtpExpiresAt: {
+        type: Date,
     },
 
     resetPasswordToken: {
@@ -39,7 +43,7 @@ userSchema.pre("save", async function(next) {
         this.password = await bcrypt.hash(this.password, 10);
     }    
 
-    next(); 
+    // next(); 
 });
 
 const User = mongoose.model("User", userSchema);

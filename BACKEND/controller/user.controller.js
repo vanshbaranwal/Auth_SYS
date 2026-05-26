@@ -5,6 +5,7 @@ import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { profile } from "console";
+import { text } from "stream/consumers";
 
 
 dotenv.config();
@@ -29,43 +30,53 @@ const registerUser = async(req, res) => {
             })
         }
         
-        // create a user in the data base
+        // create a user in the database
         const user = await User.create({
             name,
             email,
-            password
+            password,
         })
         console.log(user);
 
         if(!user){
             return res.status(400).json({
-                message: "user not registered"
+                message: "user not registered",
             })
         }
 
-        // create a verification token
-        const token = crypto.randomBytes(32).toString("hex")
-        console.log(token);
+        // create a verification otp
+        const otp = crypto.randomInt(100000, 1000000).toString(); // using crypto here instead of math.floor because it is more secure as math.floor or random internally flow patterns
+        console.log(otp);
 
-        // save token to the database
-        user.verificationToken = token
+        // save otp to the database
+        user.verificationOtp = otp; 
+        user.verificationOtpExpiresAt = Date.now() + 10 * 60 * 1000; // 10 mins expirty time
 
         await user.save()
 
         // send token as email to the user
         const transporter = nodemailer.createTransport({
-            service: "gmail",
+            host: process.env.MAILTRAP_HOST,
+            port: process.env.MAILTRAP_PORT,
+            secure: false,
             auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS
+                user: process.env.MAILTRAP_USERNAME,
+                pass: process.env.MAILTRAP_PASSWORD
             }
         });
-        await transporter.sendMail({
-            from: process.env.EMAIL_USER,
-            to: email,
-            subject: "verify your account",
-            text: `please click on thee following link: 
-            ${process.env.BASE_URL}/api/v1/users/verify/${token}`,
+
+        const mailOptions = {
+            from: "test@example.com",
+            to: user.email,
+            subject: "verify your email",
+            text: `the verification otp is : ${otp}`,
+        };
+
+        await transporter.sendMail(mailOptions, (error, info) => {
+            if(error){
+                return console.log("error occurred : ", error.message);
+            }
+            console.log("otp sent successfully : ", info.messageId);
         });
 
         // send success status to the user
@@ -77,7 +88,7 @@ const registerUser = async(req, res) => {
     } catch (error) {
         res.status(400).json({
             message: "user not registered",
-            error,
+            error: error.message,
             success: false
         });
     }
@@ -85,38 +96,60 @@ const registerUser = async(req, res) => {
 };
 
 const verifyUser = async (req, res) => {
-    // get token from url
-    const {token} = req.params
-    console.log(token);
+    try {
+        // get otp from url
+        const {otp} = req.body // otps are send in the body and not in the params because otps are sensitive
+        console.log(otp);
+    
+        // validate otp
+        if(!otp){
+            return res.status(400).json({
+                message: "invalid OTP",
+            });
+        }
+        
+        // otp expired validation
+        if(Date.now() > user.verificationOtpExpiresAt){
+            return res.status(400).json({
+                message: "the otp has expired",
+                success: false
+            });
+        }
 
-    // validate token
-    if(!token){
+        // find user based on otp
+        const user = await User.findOne({verificationOtp: otp})
+    
+        // if not
+        if(!user){
+            return res.status(400).json({
+                message: "invalid OTP",
+            });
+        }
+    
+        // set is verified field to true
+        user.isVerified = true;
+    
+        // remove verification otp and expiry time
+        user.verificationOtp = undefined;
+        user.verificationOtpExpiresAt = undefined;
+        
+        // save
+        await user.save();
+
+        // return response
+        return res.status(200).json({
+            message: "user is verified successfully!!",
+            success: true
+        });
+
+    } catch (error) {
+
         return res.status(400).json({
-            message: "invalid token",
+            message: "user verification failed",
+            error: error.message,
+            success: false,
         });
     }
-    
-    // find user based on token
-    const user = await User.findOne({verificationToken: token})
-
-    // if not
-    if(!user){
-        return res.status(400).json({
-            message: "invalid token",
-        });
-    }
-
-    // set is verified field to true
-    user.isVerified = true;
-
-    // remove verification token
-    user.verificationToken = undefined;
-    
-    // save
-    await user.save();
-
-    // return response
-
 
 }
 
@@ -177,7 +210,21 @@ const login = async(req, res) => {
 
 const getMe = async(req, res) => {
     try {
-        console.log("reached at the profile level");
+        const user = await User.findById(req.user.id).select('-password');
+
+        if(!user){
+            return res.status(400).json({
+                success: false,
+                message: "user not found"
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            user
+        });
+
+
     } catch (error) {
         
     }
@@ -186,7 +233,14 @@ const getMe = async(req, res) => {
 
 const logoutUser = async(req, res) => {
     try {
-        
+        res.cookie('token', '', {
+            expires: new Date(0) // not completed to be corrected in future
+        });
+
+        res.status(200).json({
+            success: true,
+            message: "logged out successfully"
+        });
     } catch (error) {
         
     }
@@ -195,7 +249,10 @@ const logoutUser = async(req, res) => {
 
 const forgotPassword = async(req, res) => {
     try {
-        
+        // get email
+        // fijnd user based on email
+        // reset token + reset expiry => date.now() + 10*60*1000 => user.save()
+        // send email => design a url
     } catch (error) {
         
     }
@@ -204,7 +261,26 @@ const forgotPassword = async(req, res) => {
 
 const resetPassword = async(req,res) => {
     try {
-        
+        //  collect tokenfrom params
+        // password from req.body
+        // find user
+        const {token} = req.params
+        const {password} = req.body
+
+        try {
+            const user = await User.findOne({
+                resetPasswordToken: token,
+                resetPasswordExpires:{$gt: Date.now()}
+            })    
+
+            // set passwordin user
+            // resettoken, resetexpiry => reset (reset here means to make them empty)
+            // save
+        } catch (error) {
+            
+        }
+
+
     } catch (error) {
         
     }
@@ -213,9 +289,3 @@ const resetPassword = async(req,res) => {
 
 export { registerUser, verifyUser, login, logoutUser, forgotPassword, resetPassword, getMe };
 
-
-// pending routes 
-// user profile
-// logout
-// forgotpassword
-// resetpassword
