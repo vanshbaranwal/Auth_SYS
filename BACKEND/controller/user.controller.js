@@ -339,29 +339,59 @@ const forgotPassword = async(req, res) => {
 
 
 const resetPassword = async(req,res) => {
+
+    const {otp, newPassword} = req.body;
+
+    // collect otp and password from req.body
+    if(!otp || !newPassword){
+        return res.status(400).json({
+            message: "all fields are required", 
+            success: false
+        });
+    }
+
     try {
-        //  collect tokenfrom params
-        // password from req.body
         // find user
-        const {token} = req.params
-        const {password} = req.body
-
-        try {
-            const user = await User.findOne({
-                resetPasswordToken: token,
-                resetPasswordExpires:{$gt: Date.now()}
-            })    
-
-            // set passwordin user
-            // resettoken, resetexpiry => reset (reset here means to make them empty)
-            // save
-        } catch (error) {
-            
+        const user = await User.findOne({resetPasswordOtp : otp});
+        if(!user){
+            return res.status(400).json({
+                message: "invalid otp",
+                success: false
+            });
         }
 
 
-    } catch (error) {
+        // otp expiry validation 
+        if(Date.now() > user.resetPasswordOtpExpiresAt){
+            return res.status(400).json({
+                message: "the otp is expired",
+                success: false
+            });
+        }
         
+        // set password in user
+        user.password = newPassword; 
+        
+        // resettoken, resetexpiry => reset (reset here means to make them empty)
+        user.resetPasswordOtp = undefined;
+        user.resetPasswordOtpExpiresAt = undefined;
+
+        // save
+        await user.save();
+
+        console.log("password reset successful")
+        return res.status(200).json({
+            message: "password reset successful",
+            success: true
+        });
+            
+    }catch (error) {
+        
+        return res.status(500).json({
+            message: "unable to reset the password",
+            success: false,
+            error: error.message
+        });
     }
 }
 
