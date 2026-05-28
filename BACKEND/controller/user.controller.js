@@ -54,7 +54,7 @@ const registerUser = async(req, res) => {
 
         await user.save()
 
-        // send token as email to the user
+        // send otp as email to the user
         const transporter = nodemailer.createTransport({
             host: process.env.MAILTRAP_HOST,
             port: process.env.MAILTRAP_PORT,
@@ -80,13 +80,13 @@ const registerUser = async(req, res) => {
         });
 
         // send success status to the user
-        res.status(201).json({
+        return res.status(201).json({
             message: "user registered successfully",
             success: true
         });
 
     } catch (error) {
-        res.status(400).json({
+        return res.status(400).json({
             message: "user not registered",
             error: error.message,
             success: false
@@ -99,7 +99,7 @@ const verifyUser = async (req, res) => {
     try {
         // get otp from url
         const {otp} = req.body // otps are send in the body and not in the params because otps are sensitive
-        console.log(otp);
+        // console.log(otp);
     
         // validate otp
         if(!otp){
@@ -108,21 +108,21 @@ const verifyUser = async (req, res) => {
             });
         }
         
+        // find user based on otp
+        const user = await User.findOne({verificationOtp: otp})
+        
+        // if not
+        if(!user){
+            return res.status(400).json({
+                message: "invalid OTP",
+            });
+        }
+
         // otp expired validation
         if(Date.now() > user.verificationOtpExpiresAt){
             return res.status(400).json({
                 message: "the otp has expired",
                 success: false
-            });
-        }
-
-        // find user based on otp
-        const user = await User.findOne({verificationOtp: otp})
-    
-        // if not
-        if(!user){
-            return res.status(400).json({
-                message: "invalid OTP",
             });
         }
     
@@ -171,7 +171,7 @@ const login = async(req, res) => {
         }
 
         const isMatch = await bcrypt.compare(password, user.password) // the password is from the above(line 122) and the second user.password is from the database
-        console.log(isMatch);
+        console.log("password match : ", isMatch);
 
         if(!isMatch){
             return res.status(400).json({
@@ -190,27 +190,32 @@ const login = async(req, res) => {
             secure: true,
             maxAge: 24*60*60*1000, 
         }
-        res.cookie("token", token, cookieOptions);
+        res.cookie("token", token, cookieOptions); // backend is sending cookies to the browser
 
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             message: "login successful",
             token,
             user:{
                 id: user._id,
                 name: user.name,
-                role: user.roll,
+                role: user.role,
             }
         });
 
     } catch (error) {
-        
+
+        return res.status(500).json({
+            message: "user was unable to login",
+            error: error.message,
+            success: false
+        });
     }
 }
 
 const getMe = async(req, res) => {
     try {
-        const user = await User.findById(req.user.id).select('-password');
+        const user = await User.findById(req.user.id).select('-password'); // here we are excluding password to go to the frontend cause we want to make sure is stays private
 
         if(!user){
             return res.status(400).json({
@@ -219,42 +224,116 @@ const getMe = async(req, res) => {
             });
         }
 
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
-            user
+            user: user
         });
 
 
     } catch (error) {
         
+        return res.status(500).json({
+            message: "unable to fetch user details",
+            error: error.message,
+            success: false
+        });
     }
 }
 
 
 const logoutUser = async(req, res) => {
     try {
-        res.cookie('token', '', {
-            expires: new Date(0) // not completed to be corrected in future
+        
+        res.clearCookie("token", {
+            httpOnly: true,
+            secure: true
         });
 
-        res.status(200).json({
+        return res.status(200).json({
             success: true,
             message: "logged out successfully"
         });
+        console.log("logout successful");
+
     } catch (error) {
         
+        return res.status(500).json({
+            message: "unable to logout the user",
+            error: error.message,
+            success: false
+        });
     }
 }
 
 
 const forgotPassword = async(req, res) => {
+    // get email
+    const {email} = req.body;
+
+    if(!email){
+        return res.status(400).json({
+            message: "email is required",
+            success: false
+        });
+    }
+
     try {
-        // get email
-        // fijnd user based on email
-        // reset token + reset expiry => date.now() + 10*60*1000 => user.save()
-        // send email => design a url
-    } catch (error) {
+        // find user based on email
+        const user = await User.findOne({email});
+        if(!user){
+            return res.status(400).json({
+                message: "user does not exists",
+                success: false
+            });
+        }        
+
         
+        // reset otp + reset expiry => date.now() + 10*60*1000 => user.save()
+        const otp = crypto.randomInt(100000, 1000000).toString();
+        console.log(otp);
+
+        user.resetPasswordOtp = otp;
+        user.resetPasswordOtpExpiresAt = Date.now() + 10 * 60 * 1000;
+
+        await user.save();
+
+        // send email => design a url
+        const transporter = nodemailer.createTransport({
+            host: process.env.MAILTRAP_HOST,
+            port: process.env.MAILTRAP_PORT,
+            secure: false,
+            auth: {
+                user: process.env.MAILTRAP_USERNAME,
+                pass: process.env.MAILTRAP_PASSWORD
+            }
+        });
+
+        const mailOptions = {
+            from: "test@example.com",
+            to: user.email,
+            subject: "password reset",
+            text: `the otp for resetting your password is : ${otp}`,
+        };
+
+        await transporter.sendMail(mailOptions, (error, info) => {
+            if(error){
+                return console.log("error occurred : ", error.message);
+            }
+            console.log("password reset otp sent successfully : ", info.messageId);
+        });
+
+        return res.status(200).json({
+            message: "reset password otp sent successfully",
+            success: true
+        });
+
+    } catch (error) {
+
+        return res.status(500).json({
+            message: "unable to process forgot password request",
+            success: false,
+            error: error.message
+        });
     }
 }
 
@@ -287,5 +366,5 @@ const resetPassword = async(req,res) => {
 }
 
 
-export { registerUser, verifyUser, login, logoutUser, forgotPassword, resetPassword, getMe };
+export { registerUser, verifyUser, login, getMe, logoutUser, forgotPassword, resetPassword };
 

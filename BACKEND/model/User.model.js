@@ -25,11 +25,11 @@ const userSchema = new mongoose.Schema({ // here schema is a method
         type: Date,
     },
 
-    resetPasswordToken: {
+    resetPasswordOtp: {
         type: String,
     },
 
-    resetPasswordExpires: {
+    resetPasswordOtpExpiresAt: {
         type: Date,
     },
 
