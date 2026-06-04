@@ -1,0 +1,279 @@
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+    --c0: #F8F9FA;
+    --c1: #E9ECEF;
+    --c2: #DEE2E6;
+    --c3: #CED4DA;
+    --c4: #ADB5BD;
+    --c5: #6C757D;
+    --c6: #495057;
+    --c7: #343A40;
+    --c8: #212529;
+}
+
+/* ── PAGE / DEMO BACKDROP ── */
+body {
+    font-family: 'DM Sans', sans-serif;
+    background-color: var(--c0);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+    linear-gradient(var(--c2) 1px, transparent 1px),
+    linear-gradient(90deg, var(--c2) 1px, transparent 1px);
+    background-size: 48px 48px;
+    opacity: 0.55;
+    pointer-events: none;
+    z-index: 0;
+}
+
+/* ── OVERLAY ── */
+.register-modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    background: rgba(33, 37, 41, 0.35);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    animation: overlayIn 0.3s ease forwards;
+    display: none;
+}
+
+@keyframes overlayIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+/* ── CARD ── */
+.modal-card {
+    position: relative;
+    width: 100%;
+    max-width: 420px;
+    background: rgba(248, 249, 250, 0.55);
+    border: 1px solid rgba(222, 226, 230, 0.7);
+    border-radius: 20px;
+    padding: 44px 40px 36px;
+    box-shadow:
+    0 8px 32px rgba(33, 37, 41, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    animation: cardIn 0.35s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+@keyframes cardIn {
+    from { opacity: 0; transform: translateY(24px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0)    scale(1);    }
+}
+
+/* ── CLOSE BUTTON ── */
+.modal-close {
+    position: absolute;
+    top: 16px;
+    right: 18px;
+    width: 30px;
+    height: 30px;
+    border: 1px solid var(--c2);
+    border-radius: 8px;
+    background: rgba(248, 249, 250, 0.7);
+    color: var(--c5);
+    font-size: 1rem;
+    line-height: 1;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.modal-close:hover {
+    background: var(--c1);
+    color: var(--c8);
+    border-color: var(--c3);
+}
+
+/* ── HEADING BLOCK ── */
+.modal-eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    letter-spacing: 0.14em;
+    color: var(--c4);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+
+.modal-title {
+    font-family: 'Syne', sans-serif;
+    font-size: 1.65rem;
+    font-weight: 800;
+    letter-spacing: -0.03em;
+    color: var(--c8);
+    margin-bottom: 28px;
+}
+
+/* ── DIVIDER LINE ── */
+.modal-divider {
+    height: 1px;
+    background: linear-gradient(90deg, var(--c2) 0%, transparent 100%);
+    margin-bottom: 28px;
+}
+
+/* ── FORM ── */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-bottom: 18px;
+}
+
+.form-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    color: var(--c5);
+    text-transform: uppercase;
+}
+
+.form-input-wrap {
+    position: relative;
+}
+
+.form-input-wrap .input-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--c4);
+    font-size: 0.9rem;
+    pointer-events: none;
+    line-height: 1;
+}
+
+.form-input {
+    width: 100%;
+    padding: 11px 14px 11px 38px;
+    background: rgba(255, 255, 255, 0.6);
+    border: 1px solid var(--c2);
+    border-radius: 10px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: var(--c8);
+    outline: none;
+    transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
+}
+
+.form-input::placeholder { color: var(--c4); }
+
+.form-input:focus {
+    border-color: var(--c5);
+    background: rgba(255, 255, 255, 0.85);
+    box-shadow: 0 0 0 3px rgba(108, 117, 125, 0.12);
+}
+
+/* password toggle */
+.pw-toggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: var(--c4);
+    font-size: 0.82rem;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.04em;
+    padding: 2px 4px;
+    transition: color 0.15s;
+}
+.pw-toggle:hover { color: var(--c6); }
+
+/* ── SUBMIT BUTTON ── */
+.btn-register {
+    width: 100%;
+    padding: 13px;
+    margin-top: 8px;
+    background: var(--c8);
+    color: var(--c0);
+    border: none;
+    border-radius: 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    transition: background 0.18s, transform 0.12s, box-shadow 0.18s;
+}
+
+.btn-register:hover {
+    background: var(--c7);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(33, 37, 41, 0.2);
+}
+
+.btn-register:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* ── FOOTER LINK ── */
+.modal-footer {
+    margin-top: 20px;
+    text-align: center;
+}
+
+.modal-footer p {
+    font-size: 0.82rem;
+    color: var(--c5);
+    font-weight: 300;
+}
+
+.modal-footer a {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--c7);
+    text-decoration: none;
+    letter-spacing: 0.04em;
+    border-bottom: 1px solid var(--c3);
+    padding-bottom: 1px;
+    transition: color 0.15s, border-color 0.15s;
+}
+
+.modal-footer a:hover {
+    color: var(--c8);
+    border-color: var(--c6);
+}
+
+/* ── STRENGTH BAR (bonus detail) ── */
+.strength-bar {
+    display: flex;
+    gap: 4px;
+    margin-top: 6px;
+}
+
+.strength-seg {
+    flex: 1;
+    height: 3px;
+    border-radius: 99px;
+    background: var(--c2);
+    transition: background 0.3s;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 480px) {
+    .modal-card { padding: 36px 24px 28px; }
+}
