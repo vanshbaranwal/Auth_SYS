@@ -41,7 +41,7 @@ body::before {
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     animation: overlayIn 0.28s ease forwards;
-    display: none;     /* this is where the display is happening */
+    display: none;   /*  this is where the display is happening */
 }
 
 @keyframes overlayIn {
@@ -334,4 +334,11 @@ body::before {
     .modal-card { padding: 36px 20px 28px; }
     .otp-box { width: 40px; height: 48px; font-size: 1.15rem; }
     .otp-row { gap: 8px; }
+}
+
+.verify-message{
+    color: var(--c6);
+    font-size: 1rem;
+    margin-top: 10px;
+    text-align: center;
 }

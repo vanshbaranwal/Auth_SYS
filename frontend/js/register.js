@@ -11,7 +11,7 @@ const emailError = document.getElementById('emailError');
 const passwordError = document.getElementById('passwordError');
 const registerMessage = document.getElementById('registerMessage');
 
-const otpOverlay = document.getElementById("otpOverlay");
+// const otpOverlay = document.getElementById("otpOverlay");
 
 // Password show/hide
 registerPwToggle.addEventListener('click', () => {
@@ -77,7 +77,7 @@ registerForm.addEventListener('submit', async (event) => {
             setTimeout(() => {
                 registerOverlay.style.display = "none";
                 otpOverlay.style.display = "flex";
-            }, 3000);
+            }, 1500);
 
         } else{
             registerMessage.textContent = data.message || "Registration Failed";

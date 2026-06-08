@@ -1,8 +1,12 @@
-const boxes     = Array.from(document.querySelectorAll('.otp-box'));
+const otpOverlay = document.getElementById("otpOverlay");
+const boxes = Array.from(document.querySelectorAll('.otp-box'));
 const verifyBtn = document.getElementById('verifyBtn');
 const verifyLabel = document.getElementById('verifyLabel');
 const resendBtn = document.getElementById('resendBtn');
 const timerBadge = document.getElementById('timerBadge');
+const otpEmail = document.getElementById("otpEmail");
+const verifyMessage = document.getElementById("verifyMessage");
+
 
 /* ── OTP INPUT LOGIC ── */
 boxes.forEach((box, i) => {
@@ -52,17 +56,60 @@ function checkComplete() {
     verifyBtn.disabled = !allFilled;
 }
 
+function stopLoading() {
+    verifyBtn.classList.remove("loading");
+    verifyLabel.textContent = "VERIFY";
+}
+
 /* ── VERIFY ── */
-verifyBtn.addEventListener('click', () => {
+verifyBtn.addEventListener('click', async (e) => {
     verifyBtn.classList.add('loading');
     verifyLabel.textContent = 'VERIFYING...';
 
-    setTimeout(() => {
-    // simulate success
-    document.getElementById('defaultState').style.display = 'none';
-    const s = document.getElementById('successState');
-    s.style.display = 'flex';
-    }, 1600);
+
+    e.preventDefault();
+    
+    const otp = boxes
+        .map(box => box.value)
+        .join("");
+
+    try {
+        const res = await fetch("http://localhost:3000/api/v1/users/verify", {
+            method: "POST",
+            headers: {"Content-Type" : "application/json"},
+            body: JSON.stringify({
+                otp: otp,
+            })
+        });
+
+        const data = await res.json();
+
+        if(res.ok && data.success){
+            verifyMessage.textContent = data.message;
+
+            // simulate success
+            document.getElementById('otpDefaultState').style.display = 'none';
+            const s = document.getElementById('otpSuccessState');
+            s.style.display = 'flex';
+            
+            setTimeout(() => {
+
+                // moving to the dashboard
+                window.location.href = "/frontend/pages/dashboard.html";
+            }, 2000);
+
+        } else{
+
+            verifyMessage.textContent = data.message || "verification failed";
+
+        }
+    } catch (error) {
+        verifyMessage.textContent = "An error occurred";
+
+    } finally {
+        stopLoading();
+    }
+
 });
 
 /* ── RESEND / TIMER ── */
@@ -86,7 +133,9 @@ resendBtn.addEventListener('click', () => {
     if (!resendBtn.classList.contains('active')) return;
     // reset boxes
     boxes.forEach(b => { b.value = ''; b.classList.remove('filled', 'error'); });
-    boxes[0].focus();
+    if(boxes.length > 0){
+        boxes[0].focus();
+    }
     checkComplete();
     // reset button
     resendBtn.classList.remove('active');
@@ -99,15 +148,20 @@ resendBtn.addEventListener('click', () => {
 
 /* ── CLOSE ── */
 document.getElementById('otpCloseBtn').addEventListener('click', closeModal);
-document.getElementById('otpOverlay').addEventListener('click', function (e) {
+otpOverlay.addEventListener('click', function (e) {
     if (e.target === this) closeModal();
 });
 
 function closeModal() {
-    const overlay = document.getElementById('otpOverlay');
-    overlay.style.animation = 'overlayIn 0.2s ease reverse forwards';
-    setTimeout(() => overlay.style.display = 'none', 200);
+    otpOverlay.style.animation = 'overlayIn 0.2s ease reverse forwards';
+    setTimeout(() => otpOverlay.style.display = 'none', 200);
 }
 
 // focus first box on load
 boxes[0].focus();
+
+// for the strong tag in the index.html file to show the user's email in the verify modal
+if(otpEmail){
+    otpEmail.textContent = sessionStorage.getItem("userEmail");
+}
+checkComplete();
