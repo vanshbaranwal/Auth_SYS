@@ -7,6 +7,17 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="../css/index.css">
+  <link rel="stylesheet" href="../css/register.css">
+  <link rel="stylesheet" href="../css/login.css"> 
+  <link rel="stylesheet" href="../css/forgot-password.css"> 
+  <link rel="stylesheet" href="../css/otp-verification.css"> 
+  <link rel="stylesheet" href="../css/reset-password.css"> 
+  <script src="../js/index.js" defer></script>
+  <script src="../js/register.js" defer></script>
+  <script src="../js/login.js" defer></script>
+  <script src="../js/forgot-password.js" defer></script>
+  <script src="../js/otp-verification.js" defer></script>
+  <script src="../js/reset-password.js" defer></script>
 </head>
 <body>
 
@@ -17,7 +28,7 @@
       <li><a href="#">Features</a></li>
       <li><a href="#">About</a></li>
       <li><a href="#">Security</a></li>
-      <li><a href="#" class="btn-nav">Get Started</a></li>
+      <li><button class="btn-nav">Get Started</button></li>
     </ul>
   </nav>
 
@@ -49,10 +60,378 @@
     </p>
 
     <div class="hero-cta">
-      <a href="#" class="btn btn-primary">Login</a>
-      <a href="#" class="btn btn-secondary">Register</a>
+      <button class="btn btn-primary" id="loginBtn">Login</button>
+      <button class="btn btn-secondary" id="registerBtn">Register</button>
     </div>
   </section>
 
+  <!-- ── register MODAL OVERLAY ── -->
+  <div class="register-modal-overlay" id="registerOverlay">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="registerModalTitle">
+ 
+      <!-- Close -->
+      <button class="modal-close" id="registerCloseBtn" aria-label="Close modal">✕</button>
+ 
+      <!-- Heading -->
+      <p class="modal-eyebrow">auth_system</p>
+      <h2 class="modal-title" id="registerModalTitle">Create Account</h2>
+      <div class="modal-divider"></div>
+ 
+      <!-- Form -->
+      <form id="registerForm">
+ 
+        <!-- Name -->
+        <div class="form-group">
+          <label class="form-label" for="name">Name</label>
+          <div class="form-input-wrap">
+            <span class="input-icon">⬡</span>
+            <input
+              class="form-input"
+              type="text"
+              id="registerName"
+              name="name"
+              placeholder="Enter Your Name"
+              autocomplete="name"
+            />
+          </div>
+          <p id="nameError" class="error-message"></p>
+        </div>
+ 
+        <!-- Email -->
+        <div class="form-group">
+          <label class="form-label" for="email">Email</label>
+          <div class="form-input-wrap">
+            <span class="input-icon">@</span>
+            <input
+              class="form-input"
+              type="email"
+              id="registerEmail"
+              name="email"
+              placeholder="Enter Your Email"
+              autocomplete="email"
+            />
+          </div>
+          <p id="emailError" class="error-message"></p>
+        </div>
+ 
+        <!-- Password -->
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <div class="form-input-wrap">
+            <span class="input-icon">#</span>
+            <input
+              class="form-input"
+              type="password"
+              id="registerPassword"
+              name="password"
+              placeholder="Min. 8 characters"
+              autocomplete="new-password"
+              oninput="updateStrength(this.value)"
+            />
+            <button
+              type="button"
+              class="pw-toggle"
+              id="registerPwToggle"
+              aria-label="Toggle password visibility"
+            >show</button>
+          </div>
+          <p id="passwordError" class="error-message"></p>
+          <!-- Password strength indicator -->
+          <div class="strength-bar" id="strengthBar">
+            <div class="strength-seg" id="seg1"></div>
+            <div class="strength-seg" id="seg2"></div>
+            <div class="strength-seg" id="seg3"></div>
+            <div class="strength-seg" id="seg4"></div>
+          </div>
+        </div>
+ 
+        <!-- Submit -->
+        <button type="submit" class="btn-register">CREATE ACCOUNT</button>
+ 
+      </form>
+ 
+      <!-- Footer link -->
+      <div class="modal-footer">
+        <p>Already have an account?</p>
+        <a href="#">Login</a>
+      </div>
+
+      <p id="registerMessage" class="registration-message"></p>
+
+    </div>
+  </div>
+
+  <!-- login modal -->
+     <div class="login-modal-overlay" id="loginOverlay">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="loginModalTitle">
+ 
+      <!-- Close -->
+      <button class="modal-close" id="loginCloseBtn" aria-label="Close modal">✕</button>
+ 
+      <!-- Heading -->
+      <p class="modal-eyebrow">auth_system</p>
+      <h2 class="modal-title" id="loginModalTitle">Sign In to <span>Auth_SYS</span></h2>
+      <div class="modal-divider"></div>
+ 
+      <!-- Form -->
+      <form id="loginForm" onsubmit="return false;">
+ 
+        <!-- Email -->
+        <div class="form-group">
+          <label class="form-label" for="email">Email</label>
+          <div class="form-input-wrap">
+            <i class="input-icon">@</i>
+            <input
+              class="form-input"
+              type="email"
+              id="loginEmail"
+              name="email"
+              placeholder="you@example.com"
+              autocomplete="email"
+            />
+          </div>
+        </div>
+ 
+        <!-- Password -->
+        <div class="form-group">
+          <label class="form-label" for="password">Password</label>
+          <div class="form-input-wrap">
+            <i class="input-icon">#</i>
+            <input
+              class="form-input"
+              type="password"
+              id="loginPassword"
+              name="password"
+              placeholder="Enter your password"
+              autocomplete="current-password"
+            />
+            <button type="button" class="pw-toggle" id="loginPwToggle" aria-label="Toggle password">show</button>
+          </div>
+        </div>
+ 
+        <!-- Forgot password -->
+        <div class="forgot-wrap">
+          <a href="#" class="forgot-link">Forgot Password?</a>
+        </div>
+ 
+        <!-- Submit -->
+        <button type="submit" class="btn-login">LOGIN</button>
+ 
+      </form>
+ 
+      <!-- Footer -->
+      <div class="modal-footer">
+        <p>Don't have an account?</p>
+        <a href="#">Register</a>
+      </div>
+ 
+    </div>
+  </div>
+  <!-- forgot password modal -->
+   <div class="forgot-modal-overlay" id="forgotOverlay">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="forgotModalTitle">
+ 
+      <button class="modal-close" id="forgotCloseBtn" aria-label="Close">✕</button>
+ 
+      <!-- Default state -->
+      <div id="forgotDefaultState">
+        <div class="modal-icon">✉</div>
+        <p class="modal-eyebrow">auth_system</p>
+        <h2 class="modal-title" id="forgotModalTitle">Forgot Password?</h2>
+        <p class="modal-desc">
+          No worries. Enter your email and we'll send you a verification code.
+        </p>
+        <div class="modal-divider"></div>
+ 
+        <form id="forgotForm" onsubmit="return false;">
+          <div class="form-group">
+            <label class="form-label" for="email">Email Address</label>
+            <div class="form-input-wrap">
+              <i class="input-icon">@</i>
+              <input
+                class="form-input"
+                type="email"
+                id="forgotEmail"
+                placeholder="you@example.com"
+                autocomplete="email"
+                required
+              />
+            </div>
+          </div>
+ 
+          <button type="submit" class="btn-otp" id="sendBtn">
+            <div class="spinner"></div>
+            <span id="btnLabel">SEND OTP</span>
+          </button>
+        </form>
+ 
+        <a href="#" class="back-link" id="backLink">
+          <span class="back-arrow">←</span> Back to Login
+        </a>
+      </div>
+ 
+      <!-- Success state -->
+      <div class="success-state" id="forgotSuccessState">
+        <div class="success-icon">✓</div>
+        <p class="success-title">Check your inbox</p>
+        <p class="success-desc">
+          We sent an OTP to<br>
+          <strong id="sentEmail"></strong><br><br>
+          Enter the code in the next step to reset your password.
+        </p>
+      </div>
+ 
+    </div>
+  </div>
+
+  <!-- otp verification modal -->
+     <div class="otp-modal-overlay" id="otpOverlay">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="otpModalTitle">
+ 
+      <button class="modal-close" id="otpCloseBtn" aria-label="Close">✕</button>
+ 
+      <!-- Default state -->
+      <div id="otpDefaultState">
+        <div class="modal-icon">⊞</div>
+        <p class="modal-eyebrow">auth_system</p>
+        <h2 class="modal-title" id="otpModalTitle">Verify Your Email</h2>
+        <p class="modal-desc">
+          We sent a 6-digit code to<br>
+          <strong id="otpEmail"></strong>
+        </p>
+        <div class="modal-divider"></div>
+ 
+        <!-- OTP inputs -->
+        <div class="otp-row" id="otpRow">
+          <input class="otp-box" type="number" maxlength="1" min="0" max="9" inputmode="numeric" aria-label="Digit 1" />
+          <input class="otp-box" type="number" maxlength="1" min="0" max="9" inputmode="numeric" aria-label="Digit 2" />
+          <input class="otp-box" type="number" maxlength="1" min="0" max="9" inputmode="numeric" aria-label="Digit 3" />
+          <input class="otp-box" type="number" maxlength="1" min="0" max="9" inputmode="numeric" aria-label="Digit 4" />
+          <input class="otp-box" type="number" maxlength="1" min="0" max="9" inputmode="numeric" aria-label="Digit 5" />
+          <input class="otp-box" type="number" maxlength="1" min="0" max="9" inputmode="numeric" aria-label="Digit 6" />
+        </div>
+ 
+        <button class="btn-verify" id="verifyBtn" disabled>
+          <div class="spinner"></div>
+          <span id="verifyLabel">VERIFY</span>
+        </button>
+ 
+        <!-- Resend -->
+        <div class="resend-row">
+          Didn't receive it?
+          <button class="resend-btn" id="resendBtn" disabled>Resend OTP</button>
+          <span class="timer-badge" id="timerBadge">0:30</span>
+        </div>
+      </div>
+ 
+      <!-- Success state -->
+      <div class="success-state" id="otpSuccessState">
+        <div class="success-icon">✓</div>
+        <p class="success-title">Email Verified</p>
+        <p class="success-desc">
+          Your account has been verified.<br>
+          You're all set to get started.
+        </p>
+      </div>
+ 
+    </div>
+  </div>
+
+  <!-- reset-password modal -->
+    
+  <div class="reset-modal-overlay" id="resetOverlay">
+    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="resetModalTitle">
+ 
+      <button class="modal-close" id="resetCloseBtn" aria-label="Close">✕</button>
+ 
+      <!-- ── DEFAULT STATE ── -->
+      <div id="resetDefaultState">
+ 
+        <div class="modal-icon">⟳</div>
+        <p class="modal-eyebrow">auth_system</p>
+        <h2 class="modal-title" id="resetModalTitle">Reset Password</h2>
+        <p class="modal-desc">Enter the OTP sent to your email and choose a new password.</p>
+        <div class="modal-divider"></div>
+ 
+        <form id="resetForm" onsubmit="return false;">
+ 
+          <!-- OTP Code -->
+          <div class="form-group">
+            <label class="form-label" for="otpCode">OTP Code</label>
+            <div class="form-input-wrap">
+              <i class="input-icon">#</i>
+              <input
+                class="form-input otp-input"
+                type="text"
+                id="otpCode"
+                placeholder="_ _ _ _ _ _"
+                maxlength="6"
+                inputmode="numeric"
+                autocomplete="one-time-code"
+              />
+            </div>
+          </div>
+ 
+          <!-- New Password -->
+          <div class="form-group">
+            <label class="form-label" for="newPassword">New Password</label>
+            <div class="form-input-wrap">
+              <i class="input-icon">⬡</i>
+              <input
+                class="form-input"
+                type="password"
+                id="newPassword"
+                placeholder="Min. 8 characters"
+                autocomplete="new-password"
+              />
+              <button type="button" class="pw-toggle" id="toggle1">show</button>
+            </div>
+            <!-- strength bar -->
+            <div class="strength-bar">
+              <div class="strength-seg" id="s1"></div>
+              <div class="strength-seg" id="s2"></div>
+              <div class="strength-seg" id="s3"></div>
+              <div class="strength-seg" id="s4"></div>
+            </div>
+          </div>
+ 
+          <!-- Confirm Password -->
+          <div class="form-group">
+            <label class="form-label" for="confirmPassword">Confirm Password</label>
+            <div class="form-input-wrap">
+              <i class="input-icon">⬡</i>
+              <input
+                class="form-input"
+                type="password"
+                id="confirmPassword"
+                placeholder="Re-enter password"
+                autocomplete="new-password"
+              />
+              <button type="button" class="pw-toggle" id="toggle2">show</button>
+            </div>
+            <div class="match-hint" id="matchHint"></div>
+          </div>
+ 
+          <button type="submit" class="btn-reset" id="resetBtn" disabled>
+            <div class="spinner"></div>
+            <span id="resetLabel">RESET PASSWORD</span>
+          </button>
+ 
+        </form>
+      </div>
+ 
+      <!-- ── SUCCESS STATE ── -->
+      <div class="success-state" id="resetSuccessState">
+        <div class="success-icon">✓</div>
+        <p class="success-title">Password Reset!</p>
+        <p class="success-desc">
+          Your password has been updated.<br>
+          You can now sign in with your new password.
+        </p>
+        <button class="btn-login-redirect" onclick="closeModal()">BACK TO LOGIN</button>
+      </div>
+ 
+    </div>
+  </div>
 </body>
 </html>

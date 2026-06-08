@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Auth_SYS</title>
+    <link rel="stylesheet" href="../css/dashboard.css">
+</head>
+<body>
+      <!-- ── NAVBAR ── -->
+  <nav class="navbar">
+    <div class="nav-logo">Auth_SYS</div>
+    <div class="nav-right">
+      <span class="nav-user">vansh@gmail.com</span>
+      <button class="btn-logout">LOGOUT</button>
+    </div>
+  </nav>
+ 
+  <!-- ── PAGE ── -->
+  <main class="page">
+ 
+    <!-- Greeting -->
+    <div class="greeting-row">
+      <p class="greeting-sub">dashboard</p>
+      <h1 class="greeting-title">Welcome back, <span>Vansh</span> 👋</h1>
+    </div>
+ 
+    <!-- Profile Card -->
+    <div class="profile-card">
+      <div class="card-header">
+        <div>
+          <p class="card-label">account · profile</p>
+          <p class="card-title">Profile Card</p>
+        </div>
+        <div class="avatar">VB</div>
+      </div>
+ 
+      <div class="profile-grid">
+        <div class="profile-row">
+          <span class="row-key">Name</span>
+          <span class="row-val">Vansh Baranwal</span>
+        </div>
+        <div class="profile-row">
+          <span class="row-key">Email</span>
+          <span class="row-val">vansh@gmail.com</span>
+        </div>
+        <div class="profile-row">
+          <span class="row-key">Role</span>
+          <span class="row-val">User</span>
+        </div>
+        <div class="profile-row">
+          <span class="row-key">Verified</span>
+          <span class="row-val">
+            <span class="badge-verified"><span class="badge-dot"></span>YES</span>
+          </span>
+        </div>
+        <div class="profile-row" style="grid-column: 1 / -1; border-right: none; padding-right: 0;">
+          <span class="row-key">User ID</span>
+          <span class="row-val mono">usr_a4f82bc91d073e56</span>
+        </div>
+      </div>
+    </div>
+ 
+    <!-- Stat Cards -->
+    <div class="stats-row">
+ 
+      <div class="stat-card">
+        <div class="stat-icon">✓</div>
+        <p class="stat-label">Email Verified</p>
+        <p class="stat-value">
+          Yes
+          <span class="stat-pill pill-green">ACTIVE</span>
+        </p>
+      </div>
+ 
+      <div class="stat-card">
+        <div class="stat-icon">⬡</div>
+        <p class="stat-label">JWT Status</p>
+        <p class="stat-value">
+          Active
+          <span class="stat-pill pill-blue">LIVE</span>
+        </p>
+      </div>
+ 
+      <div class="stat-card">
+        <div class="stat-icon">⊞</div>
+        <p class="stat-label">OTP Auth</p>
+        <p class="stat-value">
+          Enabled
+          <span class="stat-pill pill-green">ON</span>
+        </p>
+      </div>
+ 
+      <div class="stat-card">
+        <div class="stat-icon">◷</div>
+        <p class="stat-label">Session</p>
+        <p class="stat-value">
+          2h 14m
+          <span class="stat-pill pill-amber">LIVE</span>
+        </p>
+      </div>
+ 
+    </div>
+ 
+    <!-- Security Features Card -->
+    <div class="security-card">
+      <div class="card-header">
+        <div>
+          <p class="card-label">account · protection</p>
+          <p class="card-title">Security Features</p>
+        </div>
+        <div class="stat-icon" style="margin-bottom:0;">⬡</div>
+      </div>
+ 
+      <ul class="security-list">
+        <li class="security-item">
+          <div class="sec-check">✓</div>
+          <div>
+            <p class="sec-text">Password Hashing</p>
+            <p class="sec-sub">bcrypt · salt rounds 10</p>
+          </div>
+        </li>
+        <li class="security-item">
+          <div class="sec-check">✓</div>
+          <div>
+            <p class="sec-text">JWT Authentication</p>
+            <p class="sec-sub">HS256 · expires 7d</p>
+          </div>
+        </li>
+        <li class="security-item">
+          <div class="sec-check">✓</div>
+          <div>
+            <p class="sec-text">OTP Verification</p>
+            <p class="sec-sub">6-digit · expires 10m</p>
+          </div>
+        </li>
+        <li class="security-item">
+          <div class="sec-check">✓</div>
+          <div>
+            <p class="sec-text">Protected Routes</p>
+            <p class="sec-sub">middleware · token guard</p>
+          </div>
+        </li>
+        <li class="security-item">
+          <div class="sec-check">✓</div>
+          <div>
+            <p class="sec-text">Secure Cookies</p>
+            <p class="sec-sub">httpOnly · sameSite strict</p>
+          </div>
+        </li>
+      </ul>
+    </div>
+ 
+    <!-- Footer strip -->
+    <div class="footer-strip">
+      <p><span class="status-dot"></span>All systems operational</p>
+      <p>Last login · Today at 10:42 AM</p>
+    </div>
+ 
+  </main>
+</body>
+</html>

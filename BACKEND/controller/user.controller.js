@@ -81,7 +81,7 @@ const registerUser = async(req, res) => {
 
         // send success status to the user
         return res.status(201).json({
-            message: "user registered successfully",
+            message: "user registered successfully and the otp is send to the user",
             success: true
         });
 
