@@ -48,7 +48,7 @@ body::before {
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
     animation: overlayIn 0.28s ease forwards;
-    display: none;     /* this is where the display is happening */
+    display: none;    /* this is where the display is happening */
 }
 
 @keyframes overlayIn {
@@ -211,7 +211,7 @@ body::before {
     margin-bottom: 22px;
 }
 
-.forgot-link {
+.forgot-redirect {
     font-family: 'DM Mono', monospace;
     font-size: 0.72rem;
     letter-spacing: 0.04em;
@@ -222,9 +222,10 @@ body::before {
     transition: color 0.15s, border-color 0.15s;
 }
 
-.forgot-link:hover {
+.forgot-redirect:hover {
     color: var(--c7);
     border-color: var(--c4);
+    cursor: pointer;
 }
 
 /* ── LOGIN BUTTON ── */
@@ -267,24 +268,33 @@ body::before {
     margin-bottom: 3px;
 }
 
-.modal-footer a {
+.register-redirect {
     font-family: 'DM Mono', monospace;
     font-size: 0.78rem;
     font-weight: 500;
     color: var(--c7);
     text-decoration: none;
     letter-spacing: 0.04em;
+    display: inline-block;
     border-bottom: 1px solid var(--c3);
     padding-bottom: 1px;
     transition: color 0.15s, border-color 0.15s;
 }
 
-.modal-footer a:hover {
+.register-redirect:hover {
     color: var(--c8);
     border-color: var(--c6);
+    cursor: pointer;
 }
 
 /* ── RESPONSIVE ── */
 @media (max-width: 480px) {
     .modal-card { padding: 36px 24px 28px; }
+}
+
+.login-message{
+    color: var(--c6);
+    font-size: 1rem;
+    margin-top: 10px;
+    text-align: center;
 }

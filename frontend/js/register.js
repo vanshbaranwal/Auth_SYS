@@ -10,6 +10,7 @@ const nameError = document.getElementById('nameError');
 const emailError = document.getElementById('emailError');
 const passwordError = document.getElementById('passwordError');
 const registerMessage = document.getElementById('registerMessage');
+const registerCloseBtn = document.getElementById('registerCloseBtn');
 
 // const otpOverlay = document.getElementById("otpOverlay");
 
@@ -36,14 +37,14 @@ function updateStrength(val) {
 }
 
 // Close on overlay click
-document.getElementById('registerOverlay').addEventListener('click', function(e) {
+registerOverlay.addEventListener('click', function(e) {
     if (e.target === this) closeModal();
 });
-document.getElementById('registerCloseBtn').addEventListener('click', closeModal);
+registerCloseBtn.addEventListener('click', closeModal);
 
 function closeModal() {
-    document.getElementById('registerOverlay').style.animation = 'overlayIn 0.2s ease reverse forwards';
-    setTimeout(() => document.getElementById('registerOverlay').style.display = 'none', 200);
+    registerOverlay.style.animation = 'overlayIn 0.2s ease reverse forwards';
+    setTimeout(() => registerOverlay.style.display = 'none', 200);
 }
 
 registerForm.addEventListener('submit', async (event) => {

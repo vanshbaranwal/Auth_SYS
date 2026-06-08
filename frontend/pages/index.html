@@ -161,57 +161,57 @@
     </div>
   </div>
 
-  <!-- login modal -->
-     <div class="login-modal-overlay" id="loginOverlay">
-    <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="loginModalTitle">
- 
-      <!-- Close -->
-      <button class="modal-close" id="loginCloseBtn" aria-label="Close modal">✕</button>
- 
-      <!-- Heading -->
-      <p class="modal-eyebrow">auth_system</p>
-      <h2 class="modal-title" id="loginModalTitle">Sign In to <span>Auth_SYS</span></h2>
-      <div class="modal-divider"></div>
- 
-      <!-- Form -->
-      <form id="loginForm" onsubmit="return false;">
- 
-        <!-- Email -->
-        <div class="form-group">
-          <label class="form-label" for="email">Email</label>
-          <div class="form-input-wrap">
-            <i class="input-icon">@</i>
-            <input
-              class="form-input"
-              type="email"
-              id="loginEmail"
-              name="email"
-              placeholder="you@example.com"
-              autocomplete="email"
-            />
+    <!-- login modal -->
+    <div class="login-modal-overlay" id="loginOverlay">
+      <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="loginModalTitle">
+        
+        <!-- Close -->
+        <button class="modal-close" id="loginCloseBtn" aria-label="Close modal">✕</button>
+   
+        <!-- Heading -->
+        <p class="modal-eyebrow">auth_system</p>
+        <h2 class="modal-title" id="loginModalTitle">Sign In to <span>Auth_SYS</span></h2>
+        <div class="modal-divider"></div>
+   
+        <!-- Form -->
+        <form id="loginForm" onsubmit="return false;">
+   
+          <!-- Email -->
+          <div class="form-group">
+            <label class="form-label" for="email">Email</label>
+            <div class="form-input-wrap">
+              <i class="input-icon">@</i>
+              <input
+                class="form-input"
+                type="email"
+                id="loginEmail"
+                name="email"
+                placeholder="Please enter your Email"
+                autocomplete="email"
+              />
+            </div>
           </div>
-        </div>
- 
-        <!-- Password -->
-        <div class="form-group">
-          <label class="form-label" for="password">Password</label>
-          <div class="form-input-wrap">
-            <i class="input-icon">#</i>
-            <input
-              class="form-input"
-              type="password"
-              id="loginPassword"
-              name="password"
-              placeholder="Enter your password"
-              autocomplete="current-password"
-            />
-            <button type="button" class="pw-toggle" id="loginPwToggle" aria-label="Toggle password">show</button>
+   
+          <!-- Password -->
+          <div class="form-group">
+            <label class="form-label" for="password">Password</label>
+            <div class="form-input-wrap">
+              <i class="input-icon">#</i>
+              <input
+                class="form-input"
+                type="password"
+                id="loginPassword"
+                name="password"
+                placeholder="Please enter your password"
+                autocomplete="current-password"
+              />
+              <button type="button" class="pw-toggle" id="loginPwToggle" aria-label="Toggle password">show</button>
+            </div>
           </div>
-        </div>
  
         <!-- Forgot password -->
         <div class="forgot-wrap">
-          <a href="#" class="forgot-link">Forgot Password?</a>
+          <p id="forgotPasswordRedirect" class="forgot-redirect">Forgot Password?</p>
         </div>
  
         <!-- Submit -->
@@ -222,9 +222,10 @@
       <!-- Footer -->
       <div class="modal-footer">
         <p>Don't have an account?</p>
-        <a href="#">Register</a>
+        <p id="registerRedirect" class="register-redirect">Register</p>
       </div>
- 
+
+      <p id="loginMessage" class="login-message"></p>
     </div>
   </div>
   <!-- forgot password modal -->

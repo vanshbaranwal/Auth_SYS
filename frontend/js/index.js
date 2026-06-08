@@ -1,8 +1,8 @@
+// const registerOverlay = document.getElementById("registerOverlay");
+// const registerCloseBtn = document.getElementById("registerCloseBtn");
+// const loginOverlay = document.getElementById("loginOverlay");
 const registerBtn = document.getElementById("registerBtn");
-const registerOverlay = document.getElementById("registerOverlay");
-const registerCloseBtn = document.getElementById("registerCloseBtn");
 const loginBtn = document.getElementById("loginBtn");
-const loginOverlay = document.getElementById("loginOverlay");
 const btnNav = document.querySelector(".btn-nav");
 
 registerBtn.addEventListener("click", function() {
