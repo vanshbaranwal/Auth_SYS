@@ -6,6 +6,8 @@ const resendBtn = document.getElementById('resendBtn');
 const timerBadge = document.getElementById('timerBadge');
 const otpEmail = document.getElementById("otpEmail");
 const verifyMessage = document.getElementById("verifyMessage");
+const otpDefaultState = document.getElementById("otpDfaultState");
+const otpSuccessState = document.getElementById("otpSuccessState");
 
 
 /* ── OTP INPUT LOGIC ── */
@@ -68,6 +70,7 @@ verifyBtn.addEventListener('click', async (e) => {
 
 
     e.preventDefault();
+    verifyMessage.textContent = "";
     
     const otp = boxes
         .map(box => box.value)
@@ -88,8 +91,8 @@ verifyBtn.addEventListener('click', async (e) => {
             verifyMessage.textContent = data.message;
 
             // simulate success
-            document.getElementById('otpDefaultState').style.display = 'none';
-            const s = document.getElementById('otpSuccessState');
+            otpDefaultState.style.display = 'none';
+            const s = otpSuccessState;
             s.style.display = 'flex';
             
             setTimeout(() => {

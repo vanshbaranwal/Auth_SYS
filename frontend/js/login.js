@@ -1,6 +1,6 @@
 // Show / hide password
-const loginPwInput  = document.getElementById('loginPassword');
-const loginPwToggle = document.getElementById('loginPwToggle');
+const loginPwInput  = document.getElementById("loginPassword");
+const loginPwToggle = document.getElementById("loginPwToggle");
 
 const loginOverlay = document.getElementById("loginOverlay");
 const loginForm = document.getElementById("loginForm");

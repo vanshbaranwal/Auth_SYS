@@ -241,21 +241,23 @@ body::before {
     font-weight: 300;
 }
 
-.modal-footer a {
+.login-redirect {
     font-family: 'DM Mono', monospace;
     font-size: 0.78rem;
     font-weight: 500;
     color: var(--c7);
     text-decoration: none;
     letter-spacing: 0.04em;
+    display: inline-block;
     border-bottom: 1px solid var(--c3);
     padding-bottom: 1px;
     transition: color 0.15s, border-color 0.15s;
 }
 
-.modal-footer a:hover {
+.login-redirect:hover {
     color: var(--c8);
     border-color: var(--c6);
+    cursor: pointer;
 }
 
 /* ── STRENGTH BAR (bonus detail) ── */

@@ -11,6 +11,7 @@ const emailError = document.getElementById('emailError');
 const passwordError = document.getElementById('passwordError');
 const registerMessage = document.getElementById('registerMessage');
 const registerCloseBtn = document.getElementById('registerCloseBtn');
+const loginRedirect = document.getElementById("loginRedirect");
 
 // const otpOverlay = document.getElementById("otpOverlay");
 
@@ -46,6 +47,12 @@ function closeModal() {
     registerOverlay.style.animation = 'overlayIn 0.2s ease reverse forwards';
     setTimeout(() => registerOverlay.style.display = 'none', 200);
 }
+
+loginRedirect.addEventListener('click', () => {
+    registerOverlay.style.display = "none";
+    loginOverlay.style.display = "flex";
+});
+
 
 registerForm.addEventListener('submit', async (event) => {
     event.preventDefault();
