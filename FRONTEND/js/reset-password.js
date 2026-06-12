@@ -4,6 +4,14 @@ const confirmPw  = document.getElementById('confirmPassword');
 const resetBtn   = document.getElementById('resetBtn');
 const resetLabel = document.getElementById('resetLabel');
 const matchHint  = document.getElementById('matchHint');
+const resetForm  = document.getElementById("resetForm");
+const resetMessage = document.getElementById("resetMessage");
+const resetDefaultState = document.getElementById("resetDefaultState");
+const resetSuccessState = document.getElementById("resetSuccessState");
+const resetOverlay = document.getElementById("resetOverlay");
+const resetCloseBtn = document.getElementById("resetCloseBtn");
+
+
 const resetSegs       = [document.getElementById('s1'), document.getElementById('s2'), document.getElementById('s3'), document.getElementById('s4')];
 const resetColors     = ['#ADB5BD', '#ADB5BD', '#6C757D', '#343A40'];
 
@@ -54,38 +62,99 @@ function validate() {
     resetBtn.disabled = !ready;
 }
 
+
+function stopLoading(){
+    resetBtn.classList.remove('loading');
+    resetLabel.textContent = 'RESET PASSWORD';
+}
+
 /* Submit */
-document.getElementById('resetForm').addEventListener('submit', () => {
+resetForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    resetMessage.textContent = "";
+
     resetBtn.classList.add('loading');
     resetLabel.textContent = 'RESETTING...';
 
-    setTimeout(() => {
-    document.getElementById('defaultState').style.display = 'none';
-    const s = document.getElementById('successState');
-    s.style.display = 'flex';
-    }, 1600);
+    const otp = otpInput.value.trim();
+    const newPassword = newPw.value;
+    const confirmPassword = confirmPw.value;
+
+    if(!otp || !newPassword || !confirmPassword){
+        resetMessage.textContent = "All fields are required";
+        return;
+    }
+
+    if(newPassword !== confirmPassword){
+        resetMessage.textContent = "Password do not match";
+        return;
+    }
+
+    try {
+        const userData = {
+            otp,
+            newPassword
+        };
+
+        const res = await fetch("http://localhost:3000/api/v1/users/reset-password", {
+            method: "POST",
+            headers: {"Content-Type" : "application/json"},
+            body: JSON.stringify(userData)
+        });
+
+        const data = await res.json();
+
+        if(res.ok && data.success){
+            resetMessage.textContent = data.message;
+
+            resetForm.reset();
+
+            resetDefaultState.style.display = "none";
+            resetSuccessState.style.display = "flex";
+
+            setTimeout(() => {
+               
+                // moving to the login modal
+                resetOverlay.style.display = "none";
+                loginOverlay.style.display = "flex";
+            }, 2000);
+
+        }else {
+            resetMessage.textContent = data.message || "Password reset failed";
+        }
+
+
+    } catch (error) {
+        resetMessage.textContent = "An error occurred";
+
+    } finally{
+
+        stopLoading();
+    }
+
 });
 
 /* Show / hide toggles */
 function makeToggle(btnId, inputId) {
-    document.getElementById(btnId).addEventListener('click', () => {
+    const btn = document.getElementById(btnId);
     const inp = document.getElementById(inputId);
+    btn.addEventListener('click', () => {
     const hidden = inp.type === 'password';
     inp.type = hidden ? 'text' : 'password';
-    document.getElementById(btnId).textContent = hidden ? 'hide' : 'show';
+    btn.textContent = hidden ? 'hide' : 'show';
     });
 }
 makeToggle('toggle1', 'newPassword');
 makeToggle('toggle2', 'confirmPassword');
 
 /* Close */
-document.getElementById('resetCloseBtn').addEventListener('click', closeModal);
-document.getElementById('resetOverlay').addEventListener('click', function (e) {
+resetCloseBtn.addEventListener('click', closeModal);
+resetOverlay.addEventListener('click', function (e) {
     if (e.target === this) closeModal();
 });
 
 function closeModal() {
-    const overlay = document.getElementById('resetOverlay');
+    const overlay = resetOverlay;
     overlay.style.animation = 'overlayIn 0.2s ease reverse forwards';
     setTimeout(() => overlay.style.display = 'none', 200);
 }
